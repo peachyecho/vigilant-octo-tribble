@@ -35,8 +35,9 @@ Peachy Echo Inc. is a multi-service platform designed to provide seamless integr
 
 ## Contact Information
 For inquiries, please reach out to us:  
-Email: support@peachyecho.com  
-Phone: +1-800-555-0199  
+Email: Leo@peachyecho.com  
+Phone: +1-410-353-5657, 1-917-266-0993
+
 
 ---  
 © 2026 Peachy Echo Inc. All rights reserved.
