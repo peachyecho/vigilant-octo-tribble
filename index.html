@@ -1,28 +1,787 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peachy Echo Inc.</title>
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peachy Echo Inc.</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --peach: #F4A57A;
+    --peach-light: #FAD2B8;
+    --peach-deep: #E07845;
+    --cream: #FFF8F2;
+    --blush: #F9DED0;
+    --echo-dark: #1A0E08;
+    --echo-mid: #3D2215;
+    --warm-gray: #8A7060;
+    --gold: #C9944A;
+  }
+
+  body {
+    background: var(--echo-dark);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === GRAIN OVERLAY === */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.6;
+  }
+
+  /* === NAV === */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 28px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(26,14,8,0.9), transparent);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-mark {
+    width: 38px;
+    height: 38px;
+    position: relative;
+  }
+
+  .logo-mark svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .nav-wordmark {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--peach-light);
+  }
+
+  .nav-wordmark span {
+    color: var(--peach);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--warm-gray);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--peach); }
+
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--peach);
+    color: var(--peach);
+    padding: 10px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+  }
+
+  .nav-cta:hover {
+    background: var(--peach);
+    color: var(--echo-dark);
+  }
+
+  /* === HERO === */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 120px 60px 80px;
+    overflow: hidden;
+  }
+
+  /* Radial glow background */
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: -10%;
+    right: -5%;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(244,165,122,0.18) 0%, rgba(224,120,69,0.08) 40%, transparent 70%);
+    pointer-events: none;
+    animation: pulse 6s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.08); opacity: 0.7; }
+  }
+
+  .hero-left {
+    z-index: 2;
+    animation: fadeUp 1s ease forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 32px;
+    animation: fadeUp 1s 0.1s ease both;
+  }
+
+  .eyebrow-line {
+    width: 40px;
+    height: 1px;
+    background: var(--peach);
+  }
+
+  .eyebrow-text {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--peach);
+    font-weight: 500;
+  }
+
+  .hero-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(52px, 6vw, 88px);
+    line-height: 1.0;
+    font-weight: 900;
+    margin-bottom: 30px;
+    animation: fadeUp 1s 0.2s ease both;
+  }
+
+  .hero-headline em {
+    font-style: italic;
+    color: var(--peach);
+    display: block;
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--warm-gray);
+    max-width: 420px;
+    margin-bottom: 50px;
+    font-weight: 300;
+    animation: fadeUp 1s 0.3s ease both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    animation: fadeUp 1s 0.4s ease both;
+  }
+
+  .btn-primary {
+    background: var(--peach);
+    color: var(--echo-dark);
+    border: none;
+    padding: 16px 36px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--peach-deep);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .btn-primary:hover::after { transform: scaleX(1); }
+  .btn-primary:hover { transform: translateY(-2px); }
+  .btn-primary span { position: relative; z-index: 1; }
+
+  .btn-ghost {
+    background: transparent;
+    border: none;
+    color: var(--cream);
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.05em;
+    transition: gap 0.3s;
+  }
+
+  .btn-ghost:hover { gap: 16px; }
+
+  .btn-ghost .arrow {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--warm-gray);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+
+  /* === HERO RIGHT - VISUAL === */
+  .hero-right {
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    animation: fadeIn 1.5s 0.5s ease both;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .brand-visual {
+    position: relative;
+    width: 420px;
+    height: 520px;
+  }
+
+  /* Central echo rings */
+  .echo-rings {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(244,165,122,0.2);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: ringExpand 4s ease-in-out infinite;
+  }
+
+  .ring:nth-child(1) { width: 120px; height: 120px; border-color: rgba(244,165,122,0.5); animation-delay: 0s; }
+  .ring:nth-child(2) { width: 200px; height: 200px; animation-delay: 0.6s; }
+  .ring:nth-child(3) { width: 300px; height: 300px; animation-delay: 1.2s; }
+  .ring:nth-child(4) { width: 400px; height: 400px; animation-delay: 1.8s; }
+
+  @keyframes ringExpand {
+    0% { opacity: 0.8; transform: translate(-50%, -50%) scale(0.95); }
+    50% { opacity: 0.3; transform: translate(-50%, -50%) scale(1.05); }
+    100% { opacity: 0.8; transform: translate(-50%, -50%) scale(0.95); }
+  }
+
+  .center-orb {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, var(--peach-light), var(--peach-deep));
+    box-shadow: 0 0 60px rgba(244,165,122,0.4), 0 0 120px rgba(224,120,69,0.2);
+    animation: orbFloat 4s ease-in-out infinite;
+  }
+
+  @keyframes orbFloat {
+    0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+    50% { transform: translate(-50%, -50%) translateY(-12px); }
+  }
+
+  /* Service cards floating */
+  .service-card {
+    position: absolute;
+    background: rgba(255,248,242,0.04);
+    border: 1px solid rgba(244,165,122,0.15);
+    backdrop-filter: blur(10px);
+    padding: 16px 20px;
+    border-radius: 2px;
+    min-width: 140px;
+    animation: cardFloat 5s ease-in-out infinite;
+  }
+
+  .service-card:nth-child(1) { top: 30px; left: 0; animation-delay: 0s; }
+  .service-card:nth-child(2) { top: 50px; right: 0; animation-delay: 1s; }
+  .service-card:nth-child(3) { bottom: 100px; left: 10px; animation-delay: 2s; }
+  .service-card:nth-child(4) { bottom: 80px; right: 10px; animation-delay: 1.5s; }
+
+  @keyframes cardFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .card-icon {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+
+  .card-title {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--peach);
+    font-weight: 500;
+  }
+
+  .card-desc {
+    font-size: 10px;
+    color: var(--warm-gray);
+    margin-top: 2px;
+  }
+
+  /* === STATS BAR === */
+  .stats-bar {
+    padding: 40px 60px;
+    border-top: 1px solid rgba(244,165,122,0.1);
+    border-bottom: 1px solid rgba(244,165,122,0.1);
+    display: flex;
+    gap: 0;
+    animation: fadeUp 1s 0.8s ease both;
+  }
+
+  .stat {
+    flex: 1;
+    padding: 0 40px;
+    border-right: 1px solid rgba(244,165,122,0.1);
+  }
+
+  .stat:first-child { padding-left: 0; }
+  .stat:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 900;
+    color: var(--peach);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+  }
+
+  /* === SERVICES SECTION === */
+  .services {
+    padding: 100px 60px;
+    animation: fadeUp 1s 1s ease both;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 60px;
+  }
+
+  .section-tag {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--peach);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-tag::before {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background: var(--peach);
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .section-title em {
+    font-style: italic;
+    color: var(--peach);
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .svc-item {
+    background: rgba(255,248,242,0.02);
+    border: 1px solid rgba(244,165,122,0.08);
+    padding: 40px 36px;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    transition: background 0.4s;
+  }
+
+  .svc-item::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--peach);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s;
+  }
+
+  .svc-item:hover::before { transform: scaleX(1); }
+  .svc-item:hover { background: rgba(244,165,122,0.04); }
+
+  .svc-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 60px;
+    font-weight: 900;
+    color: rgba(244,165,122,0.08);
+    line-height: 1;
+    margin-bottom: 20px;
+    transition: color 0.3s;
+  }
+
+  .svc-item:hover .svc-number { color: rgba(244,165,122,0.15); }
+
+  .svc-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: var(--peach-light);
+  }
+
+  .svc-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--warm-gray);
+    font-weight: 300;
+  }
+
+  .svc-arrow {
+    margin-top: 28px;
+    font-size: 20px;
+    color: var(--peach);
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s;
+  }
+
+  .svc-item:hover .svc-arrow { opacity: 1; transform: translateX(0); }
+
+  /* === MARQUEE === */
+  .marquee-section {
+    padding: 30px 0;
+    overflow: hidden;
+    border-top: 1px solid rgba(244,165,122,0.08);
+    border-bottom: 1px solid rgba(244,165,122,0.08);
+    background: rgba(244,165,122,0.03);
+  }
+
+  .marquee-track {
+    display: flex;
+    gap: 60px;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .marquee-item {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--warm-gray);
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 60px;
+  }
+
+  .marquee-dot {
+    width: 4px;
+    height: 4px;
+    background: var(--peach);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* === FOOTER === */
+  .footer {
+    padding: 60px 60px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(244,165,122,0.1);
+  }
+
+  .footer-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--peach-light);
+  }
+
+  .footer-brand span { color: var(--peach); font-style: italic; }
+
+  .footer-copy {
+    font-size: 12px;
+    color: var(--warm-gray);
+    letter-spacing: 0.06em;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+  }
+
+  .footer-links a {
+    font-size: 11px;
+    color: var(--warm-gray);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--peach); }
+</style>
 </head>
 <body>
-    <header>
-        <h1>Welcome to Peachy Echo Inc.</h1>
-        <p>Your one-stop shop for all your peachy needs!</p>
-    </header>
-    <main>
-        <section>
-            <h2>About Us</h2>
-            <p>We are dedicated to providing the best peach-related products and services.
-        </section>
-        <section>
-            <h2>Contact Us</h2>
-            <p>Email: contact@peachyecho.com</p>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2026 Peachy Echo Inc.</p>
-    </footer>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 38 38" fill="none">
+        <circle cx="19" cy="19" r="18" stroke="#F4A57A" stroke-width="1"/>
+        <circle cx="19" cy="19" r="12" stroke="#F4A57A" stroke-width="0.8" stroke-dasharray="3 2"/>
+        <circle cx="19" cy="19" r="6" fill="#F4A57A" opacity="0.9"/>
+        <path d="M9 19 Q14 14 19 19 Q24 24 29 19" stroke="#FAD2B8" stroke-width="1" fill="none"/>
+      </svg>
+    </div>
+    <span class="nav-wordmark">Peachy <span>Echo</span> Inc.</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#">Services</a></li>
+    <li><a href="#">Studio</a></li>
+    <li><a href="#">Work</a></li>
+    <li><a href="#">Journal</a></li>
+  </ul>
+  <button class="nav-cta">Get Started</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text">Multi-Service Creative Studio</span>
+    </div>
+    <h1 class="hero-headline">
+      Resonant
+      <em>by design.</em>
+    </h1>
+    <p class="hero-sub">
+      Peachy Echo Inc. is a full-spectrum creative studio building brands, experiences, and digital ecosystems that leave a lasting impression — warm in tone, precise in execution.
+    </p>
+    <div class="hero-actions">
+      <button class="btn-primary"><span>Explore Our Work</span></button>
+      <button class="btn-ghost">
+        Our Story
+        <div class="arrow">→</div>
+      </button>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="brand-visual">
+      <!-- Service cards -->
+      <div class="service-card">
+        <div class="card-icon">✦</div>
+        <div class="card-title">Branding</div>
+        <div class="card-desc">Identity & Strategy</div>
+      </div>
+      <div class="service-card">
+        <div class="card-icon">◈</div>
+        <div class="card-title">Digital</div>
+        <div class="card-desc">Web & Experience</div>
+      </div>
+      <div class="service-card">
+        <div class="card-icon">◉</div>
+        <div class="card-title">Motion</div>
+        <div class="card-desc">Film & Animation</div>
+      </div>
+      <div class="service-card">
+        <div class="card-icon">⬡</div>
+        <div class="card-title">Strategy</div>
+        <div class="card-desc">Growth & Insight</div>
+      </div>
+
+      <!-- Rings & orb -->
+      <div class="echo-rings">
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="center-orb"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-num">200+</div>
+    <div class="stat-label">Projects Delivered</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">6</div>
+    <div class="stat-label">Core Services</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">94%</div>
+    <div class="stat-label">Client Retention</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">12yr</div>
+    <div class="stat-label">Studio Legacy</div>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item">Brand Identity <div class="marquee-dot"></div></span>
+    <span class="marquee-item">Web Design <div class="marquee-dot"></div></span>
+    <span class="marquee-item">Motion Graphics <div class="marquee-dot"></div></span>
+    <span class="marquee-item">Creative Strategy <div class="marquee-dot"></div></span>
+    <span class="marquee-item">Packaging Design <div class="marquee-dot"></div></span>
+    <span class="marquee-item">Digital Marketing <div class="marquee-dot"></div></span>
+    <span class="marquee-item">Brand Identity <div class="marquee-dot"></div></span>
+    <span class="marquee-item">Web Design <div class="marquee-dot"></div></span>
+    <span class="marquee-item">Motion Graphics <div class="marquee-dot"></div></span>
+    <span class="marquee-item">Creative Strategy <div class="marquee-dot"></div></span>
+    <span class="marquee-item">Packaging Design <div class="marquee-dot"></div></span>
+    <span class="marquee-item">Digital Marketing <div class="marquee-dot"></div></span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services">
+  <div class="section-header">
+    <div>
+      <div class="section-tag">What We Do</div>
+      <h2 class="section-title">Services that<br><em>echo forward.</em></h2>
+    </div>
+  </div>
+  <div class="services-grid">
+    <div class="svc-item">
+      <div class="svc-number">01</div>
+      <div class="svc-name">Brand Identity</div>
+      <p class="svc-desc">From naming and visual systems to tone of voice — we build brands that feel inevitable.</p>
+      <div class="svc-arrow">→</div>
+    </div>
+    <div class="svc-item">
+      <div class="svc-number">02</div>
+      <div class="svc-name">Web & Digital</div>
+      <p class="svc-desc">Crafted digital experiences that convert, captivate, and communicate who you are.</p>
+      <div class="svc-arrow">→</div>
+    </div>
+    <div class="svc-item">
+      <div class="svc-number">03</div>
+      <div class="svc-name">Motion & Film</div>
+      <p class="svc-desc">Brand films, animations, and reels that move audiences and anchor memory.</p>
+      <div class="svc-arrow">→</div>
+    </div>
+    <div class="svc-item">
+      <div class="svc-number">04</div>
+      <div class="svc-name">Creative Strategy</div>
+      <p class="svc-desc">Market insight and brand positioning woven into a clear, actionable growth direction.</p>
+      <div class="svc-arrow">→</div>
+    </div>
+    <div class="svc-item">
+      <div class="svc-number">05</div>
+      <div class="svc-name">Packaging & Print</div>
+      <p class="svc-desc">Physical touchpoints designed with the same care as every digital pixel.</p>
+      <div class="svc-arrow">→</div>
+    </div>
+    <div class="svc-item">
+      <div class="svc-number">06</div>
+      <div class="svc-name">Campaign Direction</div>
+      <p class="svc-desc">Full-funnel campaigns with a singular creative vision, from concept to execution.</p>
+      <div class="svc-arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-brand">Peachy <span>Echo</span> Inc.</div>
+  <span class="footer-copy">© 2025 Peachy Echo Inc. All rights reserved.</span>
+  <ul class="footer-links">
+    <li><a href="#">Privacy</a></li>
+    <li><a href="#">Terms</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</footer>
+
 </body>
 </html>
